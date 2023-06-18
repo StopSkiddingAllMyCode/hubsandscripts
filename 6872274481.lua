@@ -247,6 +247,83 @@ runcode(function()
     })
 end)
 runcode(function()
+    local enable8 = false
+    local AntiDeath = {Enabled = false}
+    AntiDeath = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "AntiDeath",
+        Function = function(callback)
+            if callback then
+                enable8 = true
+                if enable8 == true then
+                    local function teleportAndAnchor()
+                        local humanoidRootPart = lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart")
+                        if humanoidRootPart then
+                            humanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, 500, 0)
+                            humanoidRootPart.Anchored = true
+                        end
+                    end
+                    local function unanchor()
+                        local humanoidRootPart = lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart")
+                        if humanoidRootPart then
+                            humanoidRootPart.Anchored = false
+                        end
+                    end
+                    local function onHealthChanged(health)
+                        if health < 20 then
+                            teleportAndAnchor()
+                        elseif health > 50 then
+                            unanchor()
+                        end
+                    end                   
+                    local function onCharacterAdded(character)
+                        local humanoid = character:WaitForChild("Humanoid")
+                        humanoid.HealthChanged:Connect(onHealthChanged)
+                    end                 
+                    lplr.CharacterAdded:Connect(onCharacterAdded)
+                    if lplr.Character then
+                        local humanoid = lplr.Character:FindFirstChild("Humanoid")
+                        onHealthChanged(humanoid and humanoid.Health or 100)
+                    end
+                end               
+            else
+                enable8 = false
+            end
+        end
+    })
+end)
+
+runcode(function()
+    local enable9 = false
+    local AntiHit = {Enabled = false}
+    AntiHit = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "AntiHit",
+        Function = function(callback)
+            if callback then
+                enable9 = true
+                if enable9 == true then
+                    local function teleportOnDamage()
+                        local humanoidRootPart = lplr.Character and lplr.Character:FindFirstChild("HumanoidRootPart")
+                        if humanoidRootPart then
+                            humanoidRootPart.CFrame = humanoidRootPart.CFrame + Vector3.new(0, 10, 0)
+                        end
+                    end
+                    local function onCharacterAdded(character)
+                        local humanoid = character:WaitForChild("Humanoid")
+                        humanoid.HealthChanged:Connect(function(health)
+                            if health < humanoid.MaxHealth then
+                                teleportOnDamage()
+                            end
+                        end)
+                    end
+                    lplr.CharacterAdded:Connect(onCharacterAdded)
+                end
+            else
+                enable9 = false
+            end
+        end
+    })
+end)
+runcode(function()
     local FastFly = {["Enabled"] = false}
     FastFly = GuiLibrary["ObjectsThatCanBeSaved"]["BlatantWindow"]["Api"].CreateOptionsButton({
         ["Name"] = "FastFly",
