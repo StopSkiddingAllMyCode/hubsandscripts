@@ -208,6 +208,52 @@ runcode(function()
     })
 end)
 runcode(function()
+    local enable4 = false
+    local AutoTP = {Enabled = false}
+    AutoTP = GuiLibrary.ObjectsThatCanBeSaved.BlatantWindow.Api.CreateOptionsButton({
+        Name = "AutoTP",
+        HoverText = "Teleports you to the closest player",
+        Function = function(callback)
+            if callback then
+                enable4 = true
+                if enable4 == true then
+                    local function getDistance(point1, point2)
+                        return (point1 - point2).Magnitude
+                    end
+                    local function findClosestPlayer()
+                        local closestPlayer = nil
+                        local minDistance = math.huge
+                        for _, player in ipairs(players:GetPlayers()) do
+                            if player ~= lplr and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                                if player.Team ~= lplr.Team then
+                                    local distance = getDistance(lplr.Character.HumanoidRootPart.Position, player.Character.HumanoidRootPart.Position)
+                                    if distance <= 10 and distance < minDistance then
+                                        closestPlayer = player
+                                        minDistance = distance
+                                    end
+                                end
+                            end
+                        end
+                        return closestPlayer
+                    end
+                    local function teleportToClosestPlayer()
+                        local closestPlayer = findClosestPlayer()
+                        if closestPlayer then
+                            lplr.Character.HumanoidRootPart.CFrame = closestPlayer.Character.HumanoidRootPart.CFrame
+                        end
+                    end
+                    while task.wait(1) do
+                        teleportToClosestPlayer()
+                    end
+                end
+            else
+                enable4 = false
+            end
+        end
+    })
+end)
+
+runcode(function()
     local DaoExploit = {["Enabled"] = false}
     DaoExploit = GuiLibrary["ObjectsThatCanBeSaved"]["UtilityWindow"]["Api"].CreateOptionsButton({
         ["Name"] = "DaoExploit",
